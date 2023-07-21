@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import studentModel from "../models/studentModel.js";
+import classModel from "../models/classModel.js";
 
 //register callback
 const registerController= async(req, res)=>{
@@ -96,7 +97,41 @@ const studentRegisterController = async (req, res) => {
       res.status(500).json({ error: 'Failed to register student' });
     }
   };
+
+    const createClassController = async (req, res) => {
+        try {
+            const classroom= await classModel.create({
+                ...req.body,
+            });
+            classroom.save();
+            await userModel.findByIdAndUpdate({ _id: req.body.userId }, { $push: { classesCreated: classroom._id } });
+            res.status(201).send({
+                message: 'Class Created Successfully',
+                success: true,
+                data: classroom
+            });
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to create class' });
+        }
+    }
+
+    const getClassroomsListController = async (req, res) => {
+        try {
+            const classroomsList = await classModel.find({ facultyId: req.body.userId });
+            res.status(200).send({
+                message: 'Classrooms List Fetched Successfully',
+                success: true,
+                data: classroomsList
+            });
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to fetch classrooms list' });
+        }
+    }
   
   
 
-export {loginController, registerController, authController, studentRegisterController };
+export {loginController, registerController, authController, studentRegisterController, createClassController, getClassroomsListController };

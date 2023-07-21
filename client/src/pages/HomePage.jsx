@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import Layout from "../componenets/Layout";
 import "../styles/HomePage.css";
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { showLoading, hideLoading } from "../redux/features/alertSlice";
 import "../styles/HomePage.css";
-import { Button, Modal, Form, Input, Row, message, Col } from "antd";
+import { Modal, Form, Input, message } from "antd";
 
 const HomePage = () => {
   const { user } = useSelector((state) => state.user);
@@ -118,10 +118,11 @@ const HomePage = () => {
       );
       dispatch(hideLoading());
       if (res.data.success) {
+        const classId = res.data.data._id; // Accessing the ID from the "data" field in the response
         message.success(res.data.message);
-        navigate("/");
+        navigate(`/classroom/${classId}`); // Navigating to the newly created classroom
       } else {
-        message.error(res.data.success);
+        message.error(res.data.message);
       }
     } catch (error) {
       dispatch(hideLoading());
@@ -129,6 +130,7 @@ const HomePage = () => {
       message.error("Something went wrong");
     }
   };
+  
 
   return (
     <Layout>

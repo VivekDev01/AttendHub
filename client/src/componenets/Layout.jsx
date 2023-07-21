@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../styles/Layout.css";
-import { adminMenu, userMenu } from "../Data/data";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { message, Badge } from "antd";
+import { message } from "antd";
 import AttendHub from "../images/AttendHub.png";
 import rocket from "../images/rocket.png";
+import switchIcon from "../images/switch.png";
 
 const Layout = ({ children }) => {
   const { user } = useSelector((state) => state.user);
@@ -61,50 +61,6 @@ const Layout = ({ children }) => {
     return Navigate("/login");
   }
 
-  const doctorMenu = [
-    {
-      name: "Home",
-      path: "/",
-      icon: "ri-home-heart-line",
-    },
-    {
-      name: "Appointments",
-      path: "/doctor-appointments",
-      icon: "ri-list-check",
-    },
-    {
-      name: "Profile",
-      path: `/doctor/profile/${user._id}`,
-      icon: "fa-solid fa-user-doctor",
-    },
-  ];
-
-  const hospitalMenu = [
-    {
-      name: "Home",
-      path: "/",
-      icon: "ri-home-heart-line",
-    },
-    {
-      name: "Appointments",
-      path: "/hospital-appointments",
-      icon: "ri-list-check",
-    },
-    {
-      name: "Profile",
-      path: `/hospital/profile/${user._id}`,
-      icon: "fa-solid fa-user-doctor",
-    },
-  ];
-
-  const sidebarMenu = user.isAdmin
-    ? adminMenu
-    : user.isDoctor
-    ? doctorMenu
-    : user.isHospital
-    ? hospitalMenu
-    : userMenu;
-
   const [email, setEmail] = useState("");
 
   const handleEmailChange = (e) => {
@@ -113,12 +69,7 @@ const Layout = ({ children }) => {
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    // Perform any necessary validation on the email input
-
-    // Clear the input field
     setEmail("");
-
-    // Display a success message
     message.success("Subscribed successfully!");
   };
 
@@ -159,13 +110,8 @@ const Layout = ({ children }) => {
                     </a>
                   </li>
                   <li>
-                    <a href="/#Doctors-list" data-hover="Doctors">
-                      Doctors
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/#Hospitals-list" data-hover="Hospitals">
-                      Hospitals
+                    <a href="/classroom-list" data-hover="Classes">
+                      Classes
                     </a>
                   </li>
                   <li>
@@ -179,9 +125,10 @@ const Layout = ({ children }) => {
                       data-hover="Profile"
                       href='#'
                     >
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user "></i>
                         {user.name}
                     </a>
+                    <img src={switchIcon} on onClick={handleLogout} style={{cursor:"pointer" ,width:"28px" , marginLeft:"15px"}} alt="" />
                   </li>
                   
                 </ul>
@@ -192,7 +139,7 @@ const Layout = ({ children }) => {
 
 
         {/* Main Content */}
-        <main style={{ marginTop: visible ? "50px" : 0 }}>
+        <main style={{ marginTop: visible ? "5px" : 0 }}>
           {/* Main content */}
           <div className="children-area">
             <div className="container">{children}</div>
@@ -339,7 +286,7 @@ const Layout = ({ children }) => {
               <div className="copyright-text">
                 <p>
                   Copyright © 2023, All Right Reserved{" "}
-                  <a href="https://codepen.io/anupkumar92/">Vivek Dev Shah</a>
+                  <a href="#">Vivek Dev Shah</a>
                 </p>
               </div>
             </div>

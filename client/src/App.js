@@ -9,6 +9,7 @@ import ProtectedRoute from "./componenets/ProtectedRoute.jsx";
 import PublicRoute from "./componenets/PublicRoute.jsx";
 import Classroom from "./pages/Classroom.jsx";
 import StudentRegister from "./pages/StudentRegister.jsx";
+import ClassroomList from "./pages/ClassroomList";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -57,7 +58,7 @@ function App() {
             />
 
             <Route
-              path="/classroom"
+              path="/classroom/:classId"
               element={
                 <ProtectedRoute>
                   <Classroom />
@@ -65,6 +66,14 @@ function App() {
               }
             />
 
+            <Route
+              path="/classroom-list"
+              element={
+                <ProtectedRoute>
+                  <ClassroomList />
+                </ProtectedRoute>
+              }
+            />
 
           </Routes>
         )}
