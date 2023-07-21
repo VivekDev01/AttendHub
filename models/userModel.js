@@ -29,10 +29,14 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    classes:{
+    classesJoined:{
         type: Array,
         default: []
-    }
+    },
+    classesCreated:{
+        type: Array,
+        default: []
+    },
 });
 
 const userModel = mongoose.model('user', userSchema);

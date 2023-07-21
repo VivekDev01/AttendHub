@@ -8,8 +8,8 @@ import {useNavigate} from 'react-router-dom'
 
 
 const StudentRegister = () => {
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
   const handleFileChange = (event) => {

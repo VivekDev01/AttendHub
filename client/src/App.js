@@ -57,7 +57,7 @@ function App() {
             />
 
             <Route
-              path="/classroom/:classroomId"
+              path="/classroom"
               element={
                 <ProtectedRoute>
                   <Classroom />
