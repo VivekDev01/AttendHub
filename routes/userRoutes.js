@@ -1,6 +1,8 @@
 import express from "express";
-import { authController, loginController, registerController} from "../controllers/userCtrl.js";
+import { authController, loginController, registerController, studentRegisterController} from "../controllers/userCtrl.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import multer from "multer";
+
 
 //rputer object
 const router = express.Router()
@@ -16,5 +18,7 @@ router.post('/register', registerController)
 //Authorization || POST
 router.post('/getUserData', authMiddleware, authController)
 
+const upload = multer();
+router.post("/student-register", authMiddleware, studentRegisterController)
 
 export default router;

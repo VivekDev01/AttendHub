@@ -1,6 +1,7 @@
 import userModel from "../models/userModel.js"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import studentModel from "../models/studentModel.js";
 
 //register callback
 const registerController= async(req, res)=>{
@@ -77,5 +78,25 @@ const authController= async (req, res) => {
     }
 }   
 
+const studentRegisterController = async (req, res) => {
+    try {
+      await studentModel.create({
+        ...req.body,
+      });
+  
+      // Await the update operation to ensure it completes before sending the response
+      await userModel.findByIdAndUpdate({ _id: req.body.userId }, { isStudent: true });
+  
+      res.status(201).send({ 
+        message: 'Student Registered Successfully', 
+        success: true,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to register student' });
+    }
+  };
+  
+  
 
-export {loginController, registerController, authController };
+export {loginController, registerController, authController, studentRegisterController };
