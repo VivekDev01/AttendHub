@@ -152,15 +152,22 @@ const studentRegisterController = async (req, res) => {
     };
     
 
-    const getCreatedClassroomsListController = async (req, res) => {
+    const getClassroomsListController = async (req, res) => {
         try {
-            const classroomsList = await classModel.find({ facultyId: req.body.userId });
+            const user= await userModel.findById({ _id: req.body.userId });
+            const Created= user.classesCreated;
+            const Joined= user.classesJoined;
+            const CreatedClassrooms = await classModel.find({ _id: { $in: Created } });
+            const JoinedClassrooms = await classModel.find({ _id: { $in: Joined } });
+            
             res.status(200).send({
                 message: 'Classrooms List Fetched Successfully',
                 success: true,
-                data: classroomsList
+                data: {
+                    CreatedClassrooms,
+                    JoinedClassrooms,
+                },
             });
-
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Failed to fetch classrooms list' });
@@ -169,4 +176,4 @@ const studentRegisterController = async (req, res) => {
   
   
 
-export {loginController, registerController, authController, studentRegisterController, createClassController, joinClassroomController, getCreatedClassroomsListController };
+export {loginController, registerController, authController, studentRegisterController, createClassController, joinClassroomController, getClassroomsListController };

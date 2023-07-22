@@ -106,7 +106,7 @@ const Layout = ({ children }) => {
                   </li>
                   <li>
                     <a href="/classroom-list" data-hover="Classes">
-                      Classes
+                      Classrooms
                     </a>
                   </li>
                   <li>

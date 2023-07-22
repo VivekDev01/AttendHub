@@ -1,5 +1,5 @@
 import express from "express";
-import { authController, loginController, registerController, studentRegisterController, createClassController, joinClassroomController, getCreatedClassroomsListController} from "../controllers/userCtrl.js";
+import { authController, loginController, registerController, studentRegisterController, createClassController, joinClassroomController, getClassroomsListController} from "../controllers/userCtrl.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import multer from "multer";
 
@@ -25,6 +25,6 @@ router.post("/create-classroom", authMiddleware, createClassController)
 
 router.post("/join-classroom", authMiddleware, joinClassroomController)
 
-router.get("/getCreatedClassroomsList", authMiddleware, getCreatedClassroomsListController )
+router.get("/getClassroomsList", authMiddleware, getClassroomsListController)
 
 export default router;

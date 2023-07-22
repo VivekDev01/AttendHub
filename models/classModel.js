@@ -9,6 +9,10 @@ const classSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    facultyName:{
+        type: String,
+        required: true,
+    },
     studentsJoined:{
         type: Array,
         default: [],

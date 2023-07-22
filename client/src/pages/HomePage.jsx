@@ -133,6 +133,7 @@ const HomePage = () => {
         {
           ...values,
           facultyId: user._id,
+          facultyName: user.name,
         },
         {
           headers: {
