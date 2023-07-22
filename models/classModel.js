@@ -8,7 +8,11 @@ const classSchema = new mongoose.Schema({
     facultyId:{
         type: String,
         required: true,
-    }
+    },
+    studentsJoined:{
+        type: Array,
+        default: [],
+    },
 })
 
 const classModel = mongoose.model('class', classSchema);

@@ -12,7 +12,6 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const Navigate = useNavigate();
 
-  const [showSidebar, setShowSidebar] = useState(false);
   const [visible, setVisible] = useState(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const headerRef = useRef(null);
@@ -45,10 +44,6 @@ const Layout = ({ children }) => {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const toggleSidebar = () => {
-    setShowSidebar(!showSidebar);
   };
 
   const handleLogout = () => {
@@ -105,7 +100,7 @@ const Layout = ({ children }) => {
                     </a>
                   </li>
                   <li>
-                    <a href="#" onClick={toggleSidebar} data-hover="Services">
+                    <a href="#" data-hover="Services">
                       Services
                     </a>
                   </li>
@@ -139,7 +134,7 @@ const Layout = ({ children }) => {
 
 
         {/* Main Content */}
-        <main style={{ marginTop: visible ? "5px" : 0 }}>
+        <main>
           {/* Main content */}
           <div className="children-area">
             <div className="container">{children}</div>
@@ -238,7 +233,7 @@ const Layout = ({ children }) => {
                         <a href="/#footer">About us</a>
                       </li>
                       <li>
-                        <a onClick={toggleSidebar} href="#">
+                        <a href="#">
                           Our Services
                         </a>
                       </li>

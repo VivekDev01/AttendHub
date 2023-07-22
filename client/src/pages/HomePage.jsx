@@ -89,15 +89,39 @@ const HomePage = () => {
     }
   };
 
-  const handleJoinClass = async (classId) => {
-    if (user.isStudent) {
-      Navigate("/classroom");
-    } else {
-      Navigate("/student-register");
+  const handleJoinClass = async (values) => {
+    try {
+      dispatch(showLoading());
+      const classId = values.classId;
+      if(classId.length!==24){
+        message.error("Invalid Class ID");
+        window.location.reload();
+        return;
+      }
+      const res= await axios.post("/api/v1/user/join-classroom", 
+      {
+        ...values,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+      );
+      dispatch(hideLoading());
+      if(res.data.success){
+        message.success(res.data.message);
+        navigate("/");
+      }
+      else{
+        message.error(res.data.message);
+      }
+
+    } catch (error) {
+      dispatch(hideLoading());
+      console.log(error);
+      message.error(error.message);
     }
-    // const res=await axios.post("api/v1/classroom/join-classroom", {
-    //   classId: classId,
-    // });
   };
 
   const handleCreateClass = async (values) => {

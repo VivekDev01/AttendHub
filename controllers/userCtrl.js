@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import studentModel from "../models/studentModel.js";
 import classModel from "../models/classModel.js";
+import mongoose from "mongoose";
 
 //register callback
 const registerController= async(req, res)=>{
@@ -117,7 +118,41 @@ const studentRegisterController = async (req, res) => {
         }
     }
 
-    const getClassroomsListController = async (req, res) => {
+    const joinClassroomController = async (req, res) => {
+        try {
+            const classId = req.body.classId;
+            const classroom = await classModel.findOne({ _id: classId });
+
+            if (!classroom) {
+                return res.status(200).send({
+                    success: true,
+                    message: 'Class ID not found. Please try a different one.',
+                });
+            }
+            const isStudentAlreadyJoined = classroom.studentsJoined.includes(req.body.userId);
+            if (isStudentAlreadyJoined) {
+                return res.status(200).send({
+                    message: 'Student has already joined this class',
+                    success: true,
+                });
+            }
+            await classroom.updateOne({ $push: { studentsJoined: req.body.userId } });
+    
+            const user = await userModel.findById({ _id: req.body.userId });
+            await user.updateOne({ $push: { classesJoined: classId } });
+    
+            res.status(201).send({
+                message: 'Joined Class Successfully',
+                success: true,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Failed to join class' });
+        }
+    };
+    
+
+    const getCreatedClassroomsListController = async (req, res) => {
         try {
             const classroomsList = await classModel.find({ facultyId: req.body.userId });
             res.status(200).send({
@@ -134,4 +169,4 @@ const studentRegisterController = async (req, res) => {
   
   
 
-export {loginController, registerController, authController, studentRegisterController, createClassController, getClassroomsListController };
+export {loginController, registerController, authController, studentRegisterController, createClassController, joinClassroomController, getCreatedClassroomsListController };
