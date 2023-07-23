@@ -17,6 +17,10 @@ const classSchema = new mongoose.Schema({
         type: Array,
         default: [],
     },
+    attendances:{
+        type: Array,
+        default: [],
+    }
 })
 
 const classModel = mongoose.model('class', classSchema);
