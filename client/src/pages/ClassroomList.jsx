@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import Layout from "../componenets/Layout"; // Corrected the import statement
 import axios from "axios";
 import { Tabs, Table } from "antd";
+import { useNavigate, Link } from "react-router-dom";
 
-const { TabPane } = Tabs; // Added TabPane import
 
 const Classes = () => {
   const [joinedClassrooms, setJoinedClassrooms] = useState([]);
   const [createdClassrooms, setCreatedClassrooms] = useState([]);
   const [activeTab, setActiveTab] = useState("1"); // Store the active tab key
+
+
+const navigate = useNavigate();
 
   const getClassroomsList = async () => {
     try {
@@ -56,20 +59,28 @@ const Classes = () => {
     {
       title: "Classroom ID",
       dataIndex: "_id",
+      render: (text, record) => (
+        <Link to={`/classroom/${record._id}`}>{text}</Link>
+      ),
     },
     {
       title: "Classroom Name",
       dataIndex: "className",
+      render: (text, record) => (
+        <Link to={`/classroom/${record._id}`}>{text}</Link>
+      ),
     },
     {
       title: "Faculty Name",
       dataIndex: "facultyName",
     },
     {
-      title:"Students Strength",
-      dataIndex:"studentsJoined.length",
-    }
+      title: "Students Strength",
+      dataIndex: "studentsJoined",
+      render: (studentsJoined) => studentsJoined.length,
+    },
   ];
+  
 
   const renderJoinedClassrooms = () => {
     if (!joinedClassrooms || joinedClassrooms.length === 0) {
@@ -83,7 +94,7 @@ const Classes = () => {
       // Add a loading state or a message indicating that there are no created classrooms
       return <p>No created classrooms found.</p>;
     }
-    return <Table dataSource={createdClassrooms} columns={columnsForCreatedClassrooms} />;
+    return <Table  dataSource={createdClassrooms} columns={columnsForCreatedClassrooms} />;
   };
 
   return (
@@ -92,12 +103,12 @@ const Classes = () => {
         {/* Remove the semicolon after "Tabs" component */}
         <Tabs defaultActiveKey="1" onChange={onChange}>
           {/* Render the content based on the selected tab */}
-          <TabPane tab="Joined Classrooms" key="1">
+          <Tabs.TabPane tab="Joined Classrooms" key="1" >
             {activeTab === "1" && renderJoinedClassrooms()}
-          </TabPane>
-          <TabPane tab="Created Classrooms" key="2">
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Created Classrooms" key="2">
             {activeTab === "2" && renderCreatedClassrooms()}
-          </TabPane>
+          </Tabs.TabPane>
         </Tabs>
       </div>
     </Layout>

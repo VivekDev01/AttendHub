@@ -119,6 +119,51 @@ const createClassController = async (req, res) => {
     }
 }
 
+const getClassroomController = async (req, res) => {
+    try {
+      const classroom = await classModel.findOne({ _id: req.body.classId});
+
+      if (!classroom) {
+            return res.status(200).send({
+                success: true,
+                message: 'Class ID not found || You are not the Faculty of the Class.',
+                data: {
+                    isFaculty: false,
+                },
+            });
+        }
+        const isFaculty = req.body.userId === classroom.facultyId;
+
+      
+        if(isFaculty){
+            return res.status(200).send({
+            message: 'Classroom Fetched Successfully',
+            success: true,
+            data: {
+                isFaculty,
+                classroom,
+            },
+        });
+        }
+        else{
+            return res.status(200).send({
+            error: 'Classroom Fetching Failed',
+            success: true,
+            data: {
+                isFaculty,
+                classroom,
+            },
+        });
+        }
+    } 
+    catch (error) {
+      console.error('Error fetching classroom:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+};
+  
+  
+
 const joinClassroomController = async (req, res) => {
     try {
         const classId = req.body.classId;
@@ -285,4 +330,4 @@ const getAttendanceRecordsController = async (req, res) => {
 
 
 
-export { loginController, registerController, authController, studentRegisterController, createClassController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController };
+export { loginController, registerController, authController, studentRegisterController, createClassController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController, getClassroomController };

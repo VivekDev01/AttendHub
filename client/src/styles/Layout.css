@@ -1,3 +1,9 @@
+.layout{
+  background-color: #ecf0f3da;
+}
+
+
+
 /* header */
 /* ================================================================================================================================================================== */
 .menu-4 {
@@ -86,7 +92,8 @@
   
   
   .children-area{
-    margin: 80px auto 50px auto;
+    margin: 50px auto 50px auto;
+    padding-top: 50px;
     min-height: 80vh;
     z-index: 0;
   }

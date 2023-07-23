@@ -1,7 +1,6 @@
 import express from "express";
-import { authController, loginController, registerController, studentRegisterController, createClassController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController} from "../controllers/userCtrl.js";
+import { authController, loginController, registerController, studentRegisterController, createClassController, getClassroomController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController} from "../controllers/userCtrl.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import multer from "multer";
 
 
 //rputer object
@@ -18,8 +17,9 @@ router.post('/register', registerController)
 //Authorization || POST
 router.post('/getUserData', authMiddleware, authController)
 
-const upload = multer();
 router.post("/student-register", authMiddleware, studentRegisterController)
+
+router.post("/getClassroom", authMiddleware, getClassroomController)
 
 router.post("/create-classroom", authMiddleware, createClassController)
 

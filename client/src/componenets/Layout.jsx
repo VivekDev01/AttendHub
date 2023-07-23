@@ -69,7 +69,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <div className="layout" style={{ backgroundColor: "#ecf0f3" }}>
+      <div className="layout">
         {/* Header */}
         <div>
           <header
@@ -132,9 +132,7 @@ const Layout = ({ children }) => {
         </div>
 
 
-        {/* Main Content */}
         <main>
-          {/* Main content */}
           <div className="children-area">
             <div className="container">{children}</div>
           </div>
