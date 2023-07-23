@@ -22,7 +22,6 @@ const HomePage = () => {
   const modalFormRef = useRef(null); //useRef is used to access the form values of form to join class
   const modalCreateClassRef = useRef(null); //useRef is used to access the form values of form to create class
 
-  const Navigate = useNavigate();
 
   const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
   const showCreateClassModal = () => {
@@ -164,7 +163,7 @@ const HomePage = () => {
         style={{ maxWidth: 800 }}
         id="band"
       >
-        <h2 className="w3-wide">ATTENDENCE SYSTEM</h2>
+        <h2 className="w3-wide">Wellcome to AttendHub</h2>
         <p className="w3-opacity">
           <i>A Product to make Attendance of a meeting easy !</i>
         </p>

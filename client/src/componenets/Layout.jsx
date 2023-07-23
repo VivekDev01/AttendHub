@@ -12,7 +12,6 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const Navigate = useNavigate();
 
-  const [visible, setVisible] = useState(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const headerRef = useRef(null);
 
@@ -100,13 +99,13 @@ const Layout = ({ children }) => {
                     </a>
                   </li>
                   <li>
-                    <a href="#" data-hover="Services">
-                      Services
+                    <a href="/classroom-list" data-hover="Classes">
+                      Classrooms
                     </a>
                   </li>
                   <li>
-                    <a href="/classroom-list" data-hover="Classes">
-                      Classrooms
+                    <a href="/attendance-record" data-hover="Services">
+                      Attendance
                     </a>
                   </li>
                   <li>

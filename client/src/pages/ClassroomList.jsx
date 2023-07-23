@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../componenets/Layout"; // Corrected the import statement
 import axios from "axios";
-import { Tabs, Table, message } from "antd";
+import { Tabs, Table, } from "antd";
 
 const { TabPane } = Tabs; // Added TabPane import
 
