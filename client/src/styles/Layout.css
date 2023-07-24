@@ -164,6 +164,12 @@
   font-family: 'Poppins', sans-serif;
   margin-bottom: 20px;
   }
+
+ .footer-social-icon .port{
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  color: #ff5e14;
+  }
   .footer-social-icon a {
   color: #fff;
   font-size: 16px;
