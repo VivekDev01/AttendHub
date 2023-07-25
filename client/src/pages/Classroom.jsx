@@ -45,6 +45,7 @@ const Classroom = () => {
     }
   };
 
+
   const copy = (textId) => {
     const inputElement = document.getElementById(textId);
     inputElement.select();
@@ -57,14 +58,49 @@ const Classroom = () => {
     window.open(url, "_blank");
   };
 
-  const handleAttendance = () => {
+  const handleAttendance = async () => {
     alert("Attendance started!");
     setIsAttendanceStarted(true);
+    try {
+      const res= await axios.post(
+        "/api/v1/user/startAttendance",
+        {
+          classId:classId,
+          isAttendanceStarted : true,          
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        if(res.data.success){
+          message.success(res.data.message);
+        }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleStopAttendance = () => {
+  const handleStopAttendance = async () => {
     alert("Attendance stopped!");
     setIsAttendanceStarted(false);
+    try {
+      const res= await axios.post("/api/v1/user/stopAttendance",
+      {
+        classId:classId,
+        isAttendanceStarted : false,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if(res.data.success){
+        message.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
