@@ -156,7 +156,8 @@ const Layout = ({ children }) => {
                     <i className="fas fa-phone" />
                     <div className="cta-text">
                       <h4>Call us</h4>
-                      <span>+91-6265898778</span>
+                      <span>+91-6265898778</span><br />
+                      <span>+91-9973741004</span>
                     </div>
                   </div>
                 </div>
@@ -165,7 +166,8 @@ const Layout = ({ children }) => {
                     <i className="far fa-envelope-open" />
                     <div className="cta-text">
                       <h4>Mail us</h4>
-                      <span>vivek65.ugcs20@iiitranchi.ac.in</span>
+                      <span>vivek65.ugcs20@iiitranchi.ac.in</span><br />
+                      <span>ankit67.ugcs20@iiitranchi.ac.in</span>
                     </div>
                   </div>
                 </div>
@@ -185,33 +187,7 @@ const Layout = ({ children }) => {
                         A platform to take care of your health and well-being
                       </p>
                     </div>
-                    <div className="footer-social-icon">
-                      <span>Follow us</span>
-                      <a
-                        href="https://www.facebook.com/vivekdev.shah/"
-                        target="_blank"
-                      >
-                        <i className="fab fa-facebook-f" />
-                      </a>
-                      <a
-                        href="https://twitter.com/Vivek_Dev01/"
-                        target="_blank"
-                      >
-                        <i className="fab fa-twitter" />
-                      </a>
-                      <a
-                        href="https://instagram.com/vivek_dev01"
-                        target="_blank"
-                      >
-                        <i className="fab fa-instagram instagram-bg" />
-                      </a>
-                      <a
-                        href="https://youtube.com/@vivekdevshah"
-                        target="_blank"
-                      >
-                        <i className="fab fa-youtube" />
-                      </a>
-                    </div>
+                    
                   </div>
                 </div>
                 <div className="col-xl-4 col-lg-4 col-md-6 mb-30">
@@ -244,31 +220,60 @@ const Layout = ({ children }) => {
                   </div>
                 </div>
                 <div className="col-xl-4 col-lg-4 col-md-6 mb-50">
-                  <div className="footer-widget">
-                    <div className="footer-widget-heading">
-                      <h3>Subscribe</h3>
-                    </div>
-                    <div className="footer-text mb-25">
-                      <p>
-                        Don’t miss to subscribe to our new feeds, kindly fill
-                        the form below.
-                      </p>
-                    </div>
+                <div className="footer-social-icon">
+                      <span>Expert Team</span>
+                      <a href="#" className="port">Vivek Dev Shah</a><br />
+                      <a
+                        href="https://www.facebook.com/vivekdev.shah/"
+                        target="_blank"
+                      >
+                        <i className="fab fa-facebook-f" />
+                      </a>
+                      <a
+                        href="https://twitter.com/Vivek_Dev01/"
+                        target="_blank"
+                      >
+                        <i className="fab fa-twitter" />
+                      </a>
+                      <a
+                        href="https://instagram.com/vivek_dev01"
+                        target="_blank"
+                      >
+                        <i className="fab fa-instagram instagram-bg" />
+                      </a>
+                      <a
+                        href="https://youtube.com/@vivekdevshah"
+                        target="_blank"
+                      >
+                        <i className="fab fa-youtube" />
+                      </a>
 
-                    <div className="subscribe-form">
-                      <form onSubmit={handleSubscribe}>
-                        <input
-                          type="text"
-                          placeholder="Email Address"
-                          value={email}
-                          onChange={handleEmailChange}
-                        />
-                        <button type="submit">
-                          <i className="fab fa-telegram-plane" />
-                        </button>
-                      </form>
+                      <br /><a href="#" className="port">Ankit Singh</a><br />
+                      <a
+                        href="#"
+                        target="_blank"
+                      >
+                        <i className="fab fa-facebook-f" />
+                      </a>
+                      <a
+                        href="#"
+                        target="_blank"
+                      >
+                        <i className="fab fa-twitter" />
+                      </a>
+                      <a
+                        href="#"
+                        target="_blank"
+                      >
+                        <i className="fab fa-instagram instagram-bg" />
+                      </a>
+                      <a
+                        href="#"
+                        target="_blank"
+                      >
+                        <i className="fab fa-youtube" />
+                      </a>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -278,7 +283,7 @@ const Layout = ({ children }) => {
               <div className="copyright-text">
                 <p>
                   Copyright © 2023, All Right Reserved{" "}
-                  <a href="#">Vivek Dev Shah</a>
+                  <a href="#">V-SMART</a>
                 </p>
               </div>
             </div>

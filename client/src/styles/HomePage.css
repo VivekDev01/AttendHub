@@ -1,5 +1,17 @@
 
 /* CSS */
+.bg{
+  background-image: url("../images/bg.jpg");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+
+}
+
 .button-77 {
   align-items: center;
   appearance: none;

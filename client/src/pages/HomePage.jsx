@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { showLoading, hideLoading } from "../redux/features/alertSlice";
 import "../styles/HomePage.css";
 import { Modal, Form, Input, message } from "antd";
+import bg from "../images/bg.jpg";
 
 const HomePage = () => {
   const { user } = useSelector((state) => state.user);
@@ -169,6 +170,8 @@ const HomePage = () => {
         </p>
       </div>
 
+
+
       <div class="container text-center">
         <div class="row">
           <div class="col">
@@ -191,6 +194,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
 
       <div>
         <>
