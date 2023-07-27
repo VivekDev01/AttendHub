@@ -55,18 +55,6 @@ const Layout = ({ children }) => {
     return Navigate("/login");
   }
 
-  const [email, setEmail] = useState("");
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    setEmail("");
-    message.success("Subscribed successfully!");
-  };
-
   return (
     <>
       <div className="layout">

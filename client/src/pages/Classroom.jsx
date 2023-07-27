@@ -58,7 +58,7 @@ const Classroom = () => {
     window.open(url, "_blank");
   };
 
-  const handleAttendance = async () => {
+  const handleStartAttendance = async () => {
     alert("Attendance started!");
     setIsAttendanceStarted(true);
     try {
@@ -133,7 +133,7 @@ const Classroom = () => {
           {isAttendanceStarted ? (
             <button onClick={handleStopAttendance}>Stop Attendance</button>
           ) : (
-            <button onClick={handleAttendance}>Start Attendance</button>
+            <button onClick={handleStartAttendance}>Start Attendance</button>
           )}
         </div>
       </div>
