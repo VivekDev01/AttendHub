@@ -112,8 +112,6 @@ def video_streaming(class_id):
     capture.release()
     cv2.destroyAllWindows()
 
-def attendence(class_id):
-    return Response(video_streaming(class_id), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def stopcamera(): 
     capture.release()
@@ -172,7 +170,8 @@ def attendence_starter():
             existing_attendance_id = x.inserted_id
             print(f"Attendance record created for className: {className} and date: {current_day_str}")
 
-        # attendence(classId)
+        return Response(video_streaming(classId), mimetype='multipart/x-mixed-replace; boundary=frame')
+
         print("Attendance Started")
         data = {
             'success': True,
