@@ -152,22 +152,32 @@ def attendence_starter():
         # Convert current_day to a string representation
         current_day_str = current_day.strftime('%Y-%m-%d')
 
-        # Create an instance of the Attendances model and save it to the database
-        new_attendance = {
-            'classId': classId,
-            'className': className,
-            'facultyId': facultyId,
-            'facultyName': facultyName,
-            'Date': current_day_str,  # Use the string representation
-            'studentsPresent': [],
-            'studentsAbsent': []
-        }
-        x = attendances.insert_one(new_attendance)
-        attendence(classId)
+        # Check if an attendance record already exists for the given classId and date
+        existing_attendance = attendances.find_one({'classId': classId, 'Date': current_day_str})
+
+        if existing_attendance:
+            existing_attendance_id = existing_attendance['_id']
+            print(f"Attendance record already exists for className: {className} and date: {current_day_str}")
+        else:
+            new_attendance = {
+                'classId': classId,
+                'className': className,
+                'facultyId': facultyId,
+                'facultyName': facultyName,
+                'Date': current_day_str,  # Use the string representation
+                'studentsPresent': [],
+                'studentsAbsent': []
+            }
+            x = attendances.insert_one(new_attendance)
+            existing_attendance_id = x.inserted_id
+            print(f"Attendance record created for className: {className} and date: {current_day_str}")
+
+        # attendence(classId)
         print("Attendance Started")
         data = {
             'success': True,
-            'message': 'Attendance started successfully!'
+            'message': 'Attendance started successfully!',
+            'attendanceId': str(existing_attendance_id)  # Convert ObjectId to string
         }
         return jsonify(data)
 
