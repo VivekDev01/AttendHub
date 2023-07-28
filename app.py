@@ -1,9 +1,11 @@
-from flask import Flask,render_template,request,redirect,url_for,session,Response, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, Response, jsonify
 
 from pymongo import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
+from flask_cors import CORS
+from datetime import date
 
 import pickle
 import cv2
@@ -21,6 +23,12 @@ load_dotenv()
 MONGO_URI = os.environ.get('MONGODB_URL')
 client = MongoClient(MONGO_URI)
 db = client['attendance']
+users=db['users']
+classes=db['classes']
+students=db['students']
+attendances = db['attendances']
+
+
 
 try:
     client.admin.command('ping')
@@ -33,6 +41,7 @@ file = open("encoded_data.p","rb")
 face_embeddings = pickle.load(file)
 
 app = Flask(__name__,template_folder="template") 
+CORS(app)
 app.secret_key = os.urandom(22)
 
 # UPLOAD_FOLDER = os.path.join('static', 'uploads')
@@ -72,8 +81,8 @@ def video_streaming(class_id):
     face_encoder = FaceNet()
     face_detector = MTCNN()
     global capture
-    url = "http://100.90.209.161:8080/video"
-    capture = cv2.VideoCapture(0)
+    url = 0
+    capture = cv2.VideoCapture(url)
     while streaming:
         isTrue,image = capture.read()
         if not isTrue:
@@ -132,13 +141,13 @@ def stopcamera():
     cv2.destroyAllWindows()
     # return redirect("/home")
 
-@app.route('/api/v1/user/stopAttendance', methods=['POST'])
+@app.route('/stopAttendance', methods=['POST', 'GET'])
 def stop_attendance():
     try:
         data = request.json
-        class_id = data.get('classId')
-        is_attendance_started = data.get('isAttendanceStarted')
+        classId = data.get('classId')
         stopcamera()
+        print("Attendance Stopped")
         response_data = {
             'success': True,
             'message': 'Attendance stopped successfully!'
@@ -152,66 +161,57 @@ def stop_attendance():
         return jsonify(response_data), 500
     
 
-# @app.route("/students_information",methods = ["POST"])
-# def students_information():
-#     if (request.method == "POST" and "date" in request.form):
-#         date = request.form["date"]
-#         my_cursor.execute("select count(student_id) from attendence where in_time = %s",(date,))
-#         count = my_cursor.fetchone()[0]
-#         return render_template("/post_information_last.html",students = count)
-#     if request.method == 'POST' and "roll_no" in request.form:
-#         student_id = request.form["roll_no"]
-#         my_cursor.execute("select count(in_time) from attendence where student_id = %s",(student_id,))
-#         class_attended = my_cursor.fetchone()[0]
-#         info = dict()
-#         my_cursor.execute("select student_name from students where student_id = %s",(student_id,))
-#         name = my_cursor.fetchone()[0]
-#         info["student_id"] = student_id
-#         info["class_attended"] = class_attended
-#         info["student_name"] = name 
-#         return render_template("/post_information.html",info = info)
-#     else:
-#         return redirect("/home")
-
-
-@app.route('/api/v1/user/startAttendance', methods=['POST'])
+@app.route('/startAttendance', methods=['POST', 'GET'])
 def attendence_starter():
     try:
-        # Accessing data sent in the request body
         data = request.json  # This will contain the JSON data sent in the request body
-
-        # Accessing specific fields from the data
-        class_id = data.get('classId')
-        faculty = data.get('facultyId')
-        is_attendance_started = data.get('isAttendanceStarted')
+        classId = data.get('classId')
+        facultyId = data.get('facultyId')
+        className = data.get('className')
+        facultyName = data.get('facultyName')
+        print("Attendance Started")
         current_day = date.today()
-        sample_data = {"classId":class_id,"Date":current_day,"facultyId":faculty,"studentsPresent":[],"studentsAbsent":[]}
-        new_attendance = attendence_table(sample_data)
-        new_attendance.save()
-        attendence(class_id)
-        response_data = {
+
+        # Convert current_day to a string representation
+        current_day_str = current_day.strftime('%Y-%m-%d')
+
+        # Create an instance of the Attendances model and save it to the database
+        new_attendance = {
+            'classId': classId,
+            'className': className,
+            'facultyId': facultyId,
+            'facultyName': facultyName,
+            'Date': current_day_str,  # Use the string representation
+            'studentsPresent': [],
+            'studentsAbsent': []
+        }
+        x = attendances.insert_one(new_attendance)
+        
+        data = {
             'success': True,
             'message': 'Attendance started successfully!'
-            ''
         }
-        return jsonify(response_data)
+        return jsonify(data)
 
     except Exception as e:
-        # If there is any error, you can handle it here and send an appropriate response
-        response_data = {
+        # Print the exception to see what might be causing the issue
+        print(f"An error occurred: {e}")
+        data = {
             'success': False,
             'message': 'An error occurred while starting attendance.'
         }
-        return jsonify(response_data), 500
+        return jsonify(data), 500
 
 
 
-@app.route('/api/v1/user/student-register', methods=['POST'])
+
+@app.route('/student-register', methods=['POST'])
 def student_register():
     try:
         user_id = request.form.get('userId')
         image_file = request.files.get('image')
         content_type = request.form.get('contentType')
+        print(user_id, image_file, content_type)
         embeddings = Embeddings()
         embeddings.adding_new_face(image_file,user_id)
         response_data = {
@@ -230,5 +230,6 @@ def student_register():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='localhost', port=5000, debug=True)
+
 

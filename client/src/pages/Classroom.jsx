@@ -59,20 +59,18 @@ const Classroom = () => {
   };
 
   const handleStartAttendance = async () => {
-    alert("Attendance started!");
     setIsAttendanceStarted(true);
     try {
       const res= await axios.post(
-        "/api/v1/user/startAttendance",
+        "http://localhost:5000/startAttendance",
         {
           classId:classId,
-          isAttendanceStarted : true,          
+          facultyId:classroom.facultyId,
+          facultyName:classroom.facultyName,
+          className:classroom.className,
+          isAttendanceStarted : true,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+      );
         if(res.data.success){
           message.success(res.data.message);
         }
@@ -82,19 +80,15 @@ const Classroom = () => {
   };
 
   const handleStopAttendance = async () => {
-    alert("Attendance stopped!");
     setIsAttendanceStarted(false);
     try {
-      const res= await axios.post("/api/v1/user/stopAttendance",
+      const res= await axios.post(
+        "http://localhost:5000/stopAttendance",
       {
         classId:classId,
         isAttendanceStarted : false,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+     );
       if(res.data.success){
         message.success(res.data.message);
       }
