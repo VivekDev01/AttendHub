@@ -20,6 +20,7 @@ from werkzeug.utils import secure_filename
 
 load_dotenv()
 
+#Database Connection
 MONGO_URI = os.environ.get('MONGODB_URL')
 client = MongoClient(MONGO_URI)
 db = client['attendance']
@@ -27,9 +28,6 @@ users=db['users']
 classes=db['classes']
 students=db['students']
 attendances = db['attendances']
-
-
-
 try:
     client.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
@@ -40,41 +38,24 @@ except Exception as e:
 file = open("encoded_data.p","rb")
 face_embeddings = pickle.load(file)
 
+
 app = Flask(__name__,template_folder="template") 
 CORS(app)
 app.secret_key = os.urandom(22)
 
-# UPLOAD_FOLDER = os.path.join('static', 'uploads')
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-@app.route('/print_collection', methods=['GET'])
-def print_collection_data():
-    # Replace 'your_collection_name' with the name of the collection you want to print
-    collection = db['users']
-    
-    # Fetch all documents from the collection
-    cursor = collection.find({})
-    
-    # Print the data to the console
-    for document in cursor:
-        print(document['name'])
-    
-    return "Data printed to console."
- 
- 
 
 streaming= True
-student_table = db['students']
-attendence_table = db['attendances']
 def mark_attendence(id,cl_id):
     try:
         current_day = date.today()
-        for items in attendence_table:
-            if(items["Date"] == current_day and items["classId"] == cl_id):
+        current_day_str = current_day.strftime('%Y-%m-%d')
+        for items in attendances:
+            if(items["Date"] == current_day_str and items["classId"] == cl_id):
                 items["studentsPresent"].append(id)
                 break
         #my_cursor.execute("insert into attendence values(%s , %s, %s);",(i0d,name,current_day))
     except:
+        print("Error in Marking Attendence")
         return 
     
 def video_streaming(class_id):
@@ -102,7 +83,7 @@ def video_streaming(class_id):
                 distance.append(face_encoder.compute_distance(embeddings[0],vector[0]))
             if(distance[np.argmin(distance)] < 0.2):
                 id = student_id[np.argmin(distance)]
-                for students in student_table:
+                for students in students:
                     if(students['studentId'] == id):
                         name = students['name']
                         break
@@ -131,15 +112,12 @@ def video_streaming(class_id):
     capture.release()
     cv2.destroyAllWindows()
 
-#@app.route('/attendence')
 def attendence(class_id):
     return Response(video_streaming(class_id), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# @app.route('/stopcamera', methods=["GET",'POST'])
 def stopcamera(): 
     capture.release()
     cv2.destroyAllWindows()
-    # return redirect("/home")
 
 @app.route('/stopAttendance', methods=['POST', 'GET'])
 def stop_attendance():
@@ -164,12 +142,11 @@ def stop_attendance():
 @app.route('/startAttendance', methods=['POST', 'GET'])
 def attendence_starter():
     try:
-        data = request.json  # This will contain the JSON data sent in the request body
+        data = request.json  
         classId = data.get('classId')
         facultyId = data.get('facultyId')
         className = data.get('className')
         facultyName = data.get('facultyName')
-        print("Attendance Started")
         current_day = date.today()
 
         # Convert current_day to a string representation
@@ -186,7 +163,8 @@ def attendence_starter():
             'studentsAbsent': []
         }
         x = attendances.insert_one(new_attendance)
-        
+        attendence(classId)
+        print("Attendance Started")
         data = {
             'success': True,
             'message': 'Attendance started successfully!'
@@ -194,15 +172,12 @@ def attendence_starter():
         return jsonify(data)
 
     except Exception as e:
-        # Print the exception to see what might be causing the issue
         print(f"An error occurred: {e}")
         data = {
             'success': False,
             'message': 'An error occurred while starting attendance.'
         }
         return jsonify(data), 500
-
-
 
 
 @app.route('/student-register', methods=['POST'])
@@ -221,7 +196,6 @@ def student_register():
         return jsonify(response_data)
 
     except Exception as e:
-        # If there is any error, you can handle it here and send an appropriate response
         response_data = {
             'success': False,
             'message': 'An error occurred while registering the student.'
@@ -229,7 +203,6 @@ def student_register():
         return jsonify(response_data), 500
 
 
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
-
-
