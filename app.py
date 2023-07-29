@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template, request, redirect, url_for, session, Response, jsonify
 
 from pymongo import MongoClient
@@ -135,9 +136,18 @@ def stop_attendance():
             'message': 'An error occurred while stopping attendance.'
         }
         return jsonify(response_data), 500
-    
 
-@app.route('/startAttendance', methods=['POST', 'GET'])
+
+@app.route('/getattendance', methods=['POST', 'GET'])
+def getAttendance():
+    return render_template('attendance.html')
+
+
+@app.route('/attendance/<classId>', methods=['POST', 'GET'])
+def attendence(classId):
+    return Response(video_streaming(classId), mimetype='multipart/x-mixed-replace; boundary=frame')  
+
+@app.route('/startAttendance', methods=['POST'])
 def attendence_starter():
     try:
         data = request.json  
@@ -170,15 +180,15 @@ def attendence_starter():
             existing_attendance_id = x.inserted_id
             print(f"Attendance record created for className: {className} and date: {current_day_str}")
 
-        return Response(video_streaming(classId), mimetype='multipart/x-mixed-replace; boundary=frame')
-
         print("Attendance Started")
         data = {
             'success': True,
             'message': 'Attendance started successfully!',
             'attendanceId': str(existing_attendance_id)  # Convert ObjectId to string
         }
-        return jsonify(data)
+        json_data = json.dumps(data)
+        
+        return redirect(f'/attendance/{classId}')
 
     except Exception as e:
         print(f"An error occurred: {e}")

@@ -1,6 +1,6 @@
 
   .copy {
-    height: 100vh;
+    min-height: 140vh;
     background-color: #577eff;
     display: flex;
     flex-direction: column;

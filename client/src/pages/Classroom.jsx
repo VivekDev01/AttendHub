@@ -14,7 +14,7 @@ const Classroom = () => {
   const navigate = useNavigate();
   const [classroom, setClassroom] = useState({});
 
-  if(classId.length!==24){
+  if (classId.length !== 24) {
     message.error("Invalid Class ID");
     navigate("/");
     return;
@@ -31,20 +31,19 @@ const Classroom = () => {
           },
         }
       );
-  
+
       if (res.data.success) {
         message.success(res.data.message);
         if (res.data.data.isFaculty === false) {
           navigate("/");
-          return ;
+          return;
         }
         setClassroom(res.data.data.classroom);
-      } 
+      }
     } catch (error) {
       console.log(error);
     }
   };
-
 
   const copy = (textId) => {
     const inputElement = document.getElementById(textId);
@@ -61,19 +60,16 @@ const Classroom = () => {
   const handleStartAttendance = async () => {
     setIsAttendanceStarted(true);
     try {
-      const res= await axios.post(
-        "http://localhost:5000/startAttendance",
-        {
-          classId:classId,
-          facultyId:classroom.facultyId,
-          facultyName:classroom.facultyName,
-          className:classroom.className,
-          isAttendanceStarted : true,
-        },
-      );
-        if(res.data.success){
-          message.success(res.data.message);
-        }
+      const res = await axios.post("http://localhost:5000/startAttendance", {
+        classId: classId,
+        facultyId: classroom.facultyId,
+        facultyName: classroom.facultyName,
+        className: classroom.className,
+        isAttendanceStarted: true,
+      });
+      if (res.data.success) {
+        message.success(res.data.message);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -82,14 +78,11 @@ const Classroom = () => {
   const handleStopAttendance = async () => {
     setIsAttendanceStarted(false);
     try {
-      const res= await axios.post(
-        "http://localhost:5000/stopAttendance",
-      {
-        classId:classId,
-        isAttendanceStarted : false,
-      },
-     );
-      if(res.data.success){
+      const res = await axios.post("http://localhost:5000/stopAttendance", {
+        classId: classId,
+        isAttendanceStarted: false,
+      });
+      if (res.data.success) {
         message.success(res.data.message);
       }
     } catch (error) {
@@ -120,7 +113,8 @@ const Classroom = () => {
         </div>
 
         <div className="container-copy">
-          <h1>Live</h1>
+          <h1>Live Stream</h1>
+          <img src={`http://localhost:5000/attendance/${classId}`} alt="Live Streaming" />
         </div>
 
         <div className="container-attendance">
