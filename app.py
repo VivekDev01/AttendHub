@@ -199,27 +199,31 @@ def attendence_starter():
         return jsonify(data), 500
 
 
-@app.route('/student-register', methods=['POST'])
+@app.route('/user/student-register', methods=['POST', 'GET'])
 def student_register():
     try:
-        user_id = request.form.get('userId')
-        image_file = request.files.get('image')
-        content_type = request.form.get('contentType')
+        print('studnet registration hitted')
+        data = request.json  
+        user_id = data.get('userId')
+        image_file = data.get('image')
+        content_type = data.get('contentType')
+        name=data.get('name')
+        print("New Student Registered with id: ", user_id, " and name: ", name) 
         print(user_id, image_file, content_type)
         embeddings = Embeddings()
-        embeddings.adding_new_face(image_file,user_id)
-        response_data = {
+        print(embeddings.adding_new_face(image_file,user_id))
+        data = {
             'success': True,
-            'message': 'Student registration successful!'
+            'message': 'Student Image Encoding successful!'
         }
-        return jsonify(response_data)
+        return jsonify(data) , 200
 
     except Exception as e:
-        response_data = {
+        data = {
             'success': False,
-            'message': 'An error occurred while registering the student.'
+            'message': 'An error occurred while encoding image.'
         }
-        return jsonify(response_data), 500
+        return jsonify(data), 500
 
 
 

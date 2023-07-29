@@ -51,6 +51,38 @@ const HomePage = () => {
     setIsStudentRegistrationModalOpen(false);
   };
 
+
+  const handleBothFinishes = async (values) => {
+    await handleFinish(values);
+    await handleFinishForFlask(values);
+  };
+
+  const handleFinishForFlask = async (values) => {
+    const formData = new FormData();
+    formData.append("userId", user._id);
+    formData.append("name", values.name);
+    formData.append("studentId", values.studentId);
+    formData.append("image", selectedFile);
+    const contentType = selectedFile.type || "png"; // Set the contentType or use a default value
+    formData.append("contentType", contentType);
+    try {
+      const res = await axios.post("http://localhost:5000/user/student-register",  
+      {
+        ...values,
+        userId: user._id,
+      });
+      window.location.reload();
+      if (res.data.success) {
+        message.success(res.data.message);
+        navigate("/");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    }
+
+
   const handleFinish = async (values) => {
     setIsStudentRegistrationModalOpen(false);
     const formData = new FormData();
@@ -77,8 +109,6 @@ const HomePage = () => {
       dispatch(hideLoading());
       if (res.data.success) {
         message.success(res.data.message);
-        navigate("/");
-        window.location.reload();
       } else {
         message.error(res.data.success);
       }
@@ -164,7 +194,7 @@ const HomePage = () => {
         style={{ maxWidth: 800 }}
         id="band"
       >
-        <h2 className="w3-wide">Wellcome to AttendHub</h2>
+        <h2 className="w3-wide">Welcome to AttendHub</h2>
         <p className="w3-opacity">
           <i>A Product to make Attendance of a meeting easy !</i>
         </p>
@@ -258,7 +288,7 @@ const HomePage = () => {
           >
             <Form
               ref={formRef}
-              onFinish={handleFinish}
+              onFinish={handleBothFinishes}
               layout="vertical"
               className="m-3"
             >
