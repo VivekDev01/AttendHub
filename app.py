@@ -169,6 +169,9 @@ def attendence_starter():
         facultyName = data.get('facultyName')
         current_day = date.today()
         
+        classId = ObjectId(classId)
+        facultyId = ObjectId(facultyId)
+
         # Convert current_day to a string representation
         current_day_str = current_day.strftime('%Y-%m-%d')
 

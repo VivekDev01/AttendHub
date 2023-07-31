@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 
-const classSchema = new mongoose.Schema({
+const { Schema, Types } = mongoose;
+const classSchema = new Schema({
     className:{
         type: String,
         required: true,
     },
     facultyId:{
-        type: String,
+        type: Types.ObjectId, // Use Types.ObjectId instead of objectId
         required: true,
     },
     facultyName:{
@@ -21,7 +22,7 @@ const classSchema = new mongoose.Schema({
         type: Array,
         default: [],
     }
-})
+});
 
 const classModel = mongoose.model('class', classSchema);
 

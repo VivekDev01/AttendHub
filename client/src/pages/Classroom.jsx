@@ -24,7 +24,7 @@ const Classroom = () => {
     try {
       const res = await axios.post(
         "/api/v1/user/getClassroom",
-        { classId: classId },
+        { classId: classId, userId: user._id },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

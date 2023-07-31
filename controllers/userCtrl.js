@@ -102,8 +102,14 @@ const studentRegisterController = async (req, res) => {
 
 const createClassController = async (req, res) => {
     try {
+        let facultyId = req.body.facultyId;
+        facultyId = new mongoose.Types.ObjectId(facultyId);
+        const className = req.body.className;
+        const facultyName = req.body.facultyName;
         const classroom = await classModel.create({
-            ...req.body,
+            facultyId: facultyId,
+            className: className,
+            facultyName: facultyName,
         });
         classroom.save();
         await userModel.findByIdAndUpdate({ _id: req.body.userId }, { $push: { classesCreated: classroom._id } });
@@ -121,9 +127,12 @@ const createClassController = async (req, res) => {
 
 const getClassroomController = async (req, res) => {
     try {
-      const classroom = await classModel.findOne({ _id: req.body.classId});
+        const classId = new mongoose.Types.ObjectId(req.body.classId);
+        const userId = new mongoose.Types.ObjectId(req.body.userId);
 
-      if (!classroom) {
+        const classroom = await classModel.findOne({ _id: classId });
+
+        if (!classroom) {
             return res.status(200).send({
                 success: true,
                 message: 'Class ID not found || You are not the Faculty of the Class.',
@@ -132,42 +141,44 @@ const getClassroomController = async (req, res) => {
                 },
             });
         }
-        const isFaculty = req.body.userId === classroom.facultyId;
 
-      
-        if(isFaculty){
+        const isFaculty = userId.equals(classroom.facultyId);
+
+        if (isFaculty) {
             return res.status(200).send({
-            message: 'Classroom Fetched Successfully',
-            success: true,
-            data: {
-                isFaculty,
-                classroom,
-            },
-        });
-        }
-        else{
+                message: 'Classroom Fetched Successfully',
+                success: true,
+                data: {
+                    isFaculty,
+                    classroom,
+                },
+            });
+        } else {
             return res.status(200).send({
-            error: 'Classroom Fetching Failed',
-            success: true,
-            data: {
-                isFaculty,
-                classroom,
-            },
-        });
+                error: 'Classroom Fetching Failed',
+                success: true,
+                data: {
+                    isFaculty,
+                    classroom,
+                },
+            });
         }
-    } 
-    catch (error) {
-      console.error('Error fetching classroom:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    } catch (error) {
+        console.error('Error fetching classroom:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
+
   
   
 
 const joinClassroomController = async (req, res) => {
     try {
-        const classId = req.body.classId;
+        let classId = req.body.classId;
+        classId = new mongoose.Types.ObjectId(classId);
         const classroom = await classModel.findOne({ _id: classId });
+        let userId = req.body.userId;
+        userId = new mongoose.Types.ObjectId(userId);
 
         if (!classroom) {
             return res.status(200).send({
@@ -175,16 +186,16 @@ const joinClassroomController = async (req, res) => {
                 message: 'Class ID not found. Please try a different one.',
             });
         }
-        const isStudentAlreadyJoined = classroom.studentsJoined.includes(req.body.userId);
+        const isStudentAlreadyJoined = classroom.studentsJoined.includes(userId);
         if (isStudentAlreadyJoined) {
             return res.status(200).send({
                 message: 'Student has already joined this class',
                 success: true,
             });
         }
-        await classroom.updateOne({ $push: { studentsJoined: req.body.userId } });
+        await classroom.updateOne({ $push: { studentsJoined: userId } });
 
-        const user = await userModel.findById({ _id: req.body.userId });
+        const user = await userModel.findById({ _id: userId });
         await user.updateOne({ $push: { classesJoined: classId } });
 
         res.status(201).send({

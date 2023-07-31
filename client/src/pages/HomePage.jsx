@@ -140,6 +140,7 @@ const HomePage = () => {
       const res= await axios.post("/api/v1/user/join-classroom", 
       {
         ...values,
+        userId: user._id,
       },
       {
         headers: {

@@ -14,7 +14,7 @@ const attendanceSchema = new mongoose.Schema({
         required: true
     },
     facultyId: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true
     },
     facultyName: {
