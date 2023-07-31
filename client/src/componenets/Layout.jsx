@@ -8,6 +8,7 @@ import rocket from "../images/rocket.png";
 import switchIcon from "../images/switch.png";
 
 const Layout = ({ children }) => {
+  var year = new Date().getFullYear();
   const { user } = useSelector((state) => state.user);
   const location = useLocation();
   const Navigate = useNavigate();
@@ -188,7 +189,7 @@ const Layout = ({ children }) => {
                         <a href={location.pathname === "/" ? "#" : "/"}>Home</a>
                       </li>
                       <li>
-                        <a href="#">portfolio</a>
+                        <a href="https://vivekdevshah-portfolio.netlify.app/">portfolio</a>
                       </li>
                       <li>
                         <a href="/#footer">About us</a>
@@ -210,28 +211,24 @@ const Layout = ({ children }) => {
                 <div className="col-xl-4 col-lg-4 col-md-6 mb-50">
                 <div className="footer-social-icon">
                       <span>Expert Team</span>
-                      <a href="#" className="port">Vivek Dev Shah</a><br />
+                      <a href="https://vivekdevshah-portfolio.netlify.app/" className="port">Vivek Dev Shah</a><br />
                       <a
                         href="https://www.facebook.com/vivekdev.shah/"
-                        target="_blank"
                       >
                         <i className="fab fa-facebook-f" />
                       </a>
                       <a
                         href="https://twitter.com/Vivek_Dev01/"
-                        target="_blank"
                       >
                         <i className="fab fa-twitter" />
                       </a>
                       <a
                         href="https://instagram.com/vivek_dev01"
-                        target="_blank"
                       >
                         <i className="fab fa-instagram instagram-bg" />
                       </a>
                       <a
                         href="https://youtube.com/@vivekdevshah"
-                        target="_blank"
                       >
                         <i className="fab fa-youtube" />
                       </a>
@@ -239,25 +236,21 @@ const Layout = ({ children }) => {
                       <br /><a href="#" className="port">Ankit Singh</a><br />
                       <a
                         href="#"
-                        target="_blank"
                       >
                         <i className="fab fa-facebook-f" />
                       </a>
                       <a
                         href="#"
-                        target="_blank"
                       >
                         <i className="fab fa-twitter" />
                       </a>
                       <a
                         href="#"
-                        target="_blank"
                       >
                         <i className="fab fa-instagram instagram-bg" />
                       </a>
                       <a
                         href="#"
-                        target="_blank"
                       >
                         <i className="fab fa-youtube" />
                       </a>
@@ -270,8 +263,8 @@ const Layout = ({ children }) => {
             <div className="container">
               <div className="copyright-text">
                 <p>
-                  Copyright © 2023, All Right Reserved{" "}
-                  <a href="#">V-SMART</a>
+                  Copyright © {year}, All Rights Reserved{" "}
+                  <a href="https://vivekdevshah-portfolio.netlify.app/">V-SMART</a>
                 </p>
               </div>
             </div>

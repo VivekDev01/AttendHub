@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { showLoading, hideLoading } from "../redux/features/alertSlice";
 import "../styles/HomePage.css";
 import { Modal, Form, Input, message } from "antd";
-import bg from "../images/bg.jpg";
 
 
 const HomePage = () => {

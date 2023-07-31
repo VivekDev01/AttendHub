@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 const Classroom = () => {
   const { user } = useSelector((state) => state.user);
   const { classId } = useParams();
-  const [isAttendanceStarted, setIsAttendanceStarted] = useState(false);
   const navigate = useNavigate();
   const [classroom, setClassroom] = useState({});
 
@@ -58,37 +57,46 @@ const Classroom = () => {
   };
 
   const handleStartAttendance = async () => {
-    setIsAttendanceStarted(true);
     try {
-      const res = await axios.post("http://localhost:5000/startAttendance", {
+      const timeout = 3000; // Set a timeout of 3 seconds
+      const startAttendanceRequest = axios.post("http://localhost:5000/startAttendance", {
         classId: classId,
         facultyId: classroom.facultyId,
         facultyName: classroom.facultyName,
         className: classroom.className,
         isAttendanceStarted: true,
       });
-      if (res.data.success) {
+  
+      // Use Promise.race to set a timeout for the request
+      const res = await Promise.race([
+        startAttendanceRequest,
+        new Promise((resolve) =>
+          setTimeout(() => resolve({ timeout: true }), timeout)
+        ),
+      ]);
+  
+      if (res.timeout) {
+        // Handle the case when the request takes longer than 3 seconds
+        // In this case, navigate to the streaming page
+        navigate(`/streaming/${classId}`);
+      } else if (res.data.success) {
+        // Handle the case when the request is successful
         message.success(res.data.message);
+        navigate(`/streaming/${classId}`);
+      } else {
+        // Handle any other case or error
+        // You can display an error message or handle it as needed
       }
     } catch (error) {
       console.log(error);
+      // Handle any error that occurs during the request
+      // You can display an error message or handle it as needed
+      navigate(`/streaming/${classId}`);
     }
   };
+  
+  
 
-  const handleStopAttendance = async () => {
-    setIsAttendanceStarted(false);
-    try {
-      const res = await axios.post("http://localhost:5000/stopAttendance", {
-        classId: classId,
-        isAttendanceStarted: false,
-      });
-      if (res.data.success) {
-        message.success(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     getClassroom();
@@ -112,17 +120,8 @@ const Classroom = () => {
           />
         </div>
 
-        <div className="container-copy">
-          <h1>Live Stream</h1>
-          <img src={`http://localhost:5000/attendance/${classId}`} alt="Live Streaming" />
-        </div>
-
         <div className="container-attendance">
-          {isAttendanceStarted ? (
-            <button onClick={handleStopAttendance}>Stop Attendance</button>
-          ) : (
             <button onClick={handleStartAttendance}>Start Attendance</button>
-          )}
         </div>
       </div>
     </Layout>

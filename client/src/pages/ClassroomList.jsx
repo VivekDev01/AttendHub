@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../componenets/Layout"; // Corrected the import statement
 import axios from "axios";
 import { Tabs, Table } from "antd";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 const Classes = () => {
@@ -11,7 +11,6 @@ const Classes = () => {
   const [activeTab, setActiveTab] = useState("1"); // Store the active tab key
 
 
-const navigate = useNavigate();
 
   const getClassroomsList = async () => {
     try {

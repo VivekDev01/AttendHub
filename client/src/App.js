@@ -11,6 +11,7 @@ import Classroom from "./pages/Classroom.jsx";
 import StudentRegister from "./pages/StudentRegister.jsx";
 import ClassroomList from "./pages/ClassroomList";
 import AttendanceRecord from "./pages/AttendanceRecord";
+import Streaming from "./pages/Streaming";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -68,6 +69,15 @@ function App() {
             />
 
             <Route
+              path="/streaming/:classId"
+              element={
+                <ProtectedRoute>
+                  <Streaming />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
               path="/classroom-list"
               element={
                 <ProtectedRoute>
@@ -80,7 +90,7 @@ function App() {
               path="/attendance-record"
               element={
                 <ProtectedRoute>
-                  <AttendanceRecord/>
+                  <AttendanceRecord />
                 </ProtectedRoute>
               }
             />
