@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    studentId: {
+        type: String,
+        default: ""
+    },
     isFaculty: {
         type: Boolean,
         default: false

@@ -7,6 +7,7 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 from flask_cors import CORS
 from datetime import date
+from bson.objectid import ObjectId  
 
 import pickle
 import cv2
@@ -18,6 +19,9 @@ import mysql.connector as db_connector
 from datetime import date,time
 from face import Embeddings
 from werkzeug.utils import secure_filename
+import  base64
+from PIL import Image
+from io import BytesIO
 
 load_dotenv()
 
@@ -60,6 +64,10 @@ def mark_attendence(id,cl_id):
         return 
     
 def video_streaming(class_id):
+    print(class_id)
+    for cur_class in classes.find():
+        if(cur_class["_id"] == class_id):
+            joinde_students = cur_class["studentsJoined"]
     face_encoder = FaceNet()
     face_detector = MTCNN()
     global capture
@@ -82,12 +90,20 @@ def video_streaming(class_id):
             for id,vector in face_embeddings.items():
                 student_id.append(id)
                 distance.append(face_encoder.compute_distance(embeddings[0],vector[0]))
-            if(distance[np.argmin(distance)] < 0.2):
+                print(distance)
+            if(distance[np.argmin(distance)] < 0.35):
                 id = student_id[np.argmin(distance)]
-                for students in students:
-                    if(students['studentId'] == id):
-                        name = students['name']
-                        break
+                flag=False
+                for curId in joinde_students:
+                    if(curId == id):
+                        for user in users.find():
+                            if(user["_id"] == id):
+                                name = user['name']
+                                flag=True
+                                break
+                        if(flag):
+                            break   
+                         
                 # my_cursor.execute("select student_name from students where student_id = %s",(id,))
                 # name = my_cursor.fetchone()[0]
                 cv2.rectangle(image,(x1,y1),(x2,y2),(255,0,0),3)
@@ -138,13 +154,9 @@ def stop_attendance():
         return jsonify(response_data), 500
 
 
-@app.route('/getattendance', methods=['POST', 'GET'])
-def getAttendance():
-    return render_template('attendance.html')
-
-
 @app.route('/attendance/<classId>', methods=['POST', 'GET'])
 def attendence(classId):
+    print("clasId is" , classId)
     return Response(video_streaming(classId), mimetype='multipart/x-mixed-replace; boundary=frame')  
 
 @app.route('/startAttendance', methods=['POST'])
@@ -156,7 +168,7 @@ def attendence_starter():
         className = data.get('className')
         facultyName = data.get('facultyName')
         current_day = date.today()
-
+        
         # Convert current_day to a string representation
         current_day_str = current_day.strftime('%Y-%m-%d')
 
@@ -199,32 +211,24 @@ def attendence_starter():
         return jsonify(data), 500
 
 
-@app.route('/user/student-register', methods=['POST', 'GET'])
+@app.route("/user/student-register", methods=["POST"])
 def student_register():
-    try:
-        print('studnet registration hitted')
-        data = request.json  
-        user_id = data.get('userId')
-        image_file = data.get('image')
-        content_type = data.get('contentType')
-        name=data.get('name')
-        print("New Student Registered with id: ", user_id, " and name: ", name) 
-        print(user_id, image_file, content_type)
-        embeddings = Embeddings()
-        print(embeddings.adding_new_face(image_file,user_id))
-        data = {
-            'success': True,
-            'message': 'Student Image Encoding successful!'
-        }
-        return jsonify(data) , 200
-
-    except Exception as e:
-        data = {
-            'success': False,
-            'message': 'An error occurred while encoding image.'
-        }
-        return jsonify(data), 500
-
+    data = request.get_json()
+    image_data_url = data.get("image")
+    user_id = data.get("userId")
+    studentId = data.get("studentId")
+    
+    user_id = ObjectId(user_id)
+    
+    users.update_one({"_id": user_id}, {'$set': {'isStudent': True, 'studentId': studentId}})
+    # Extract the base64-encoded image data from the data URL
+    _, encoded_image = image_data_url.split(",", 1)
+    decoded_image = base64.b64decode(encoded_image)
+    pil_image = Image.open(BytesIO(decoded_image))
+    image_array = np.array(pil_image)
+    embeddings = Embeddings()
+    print(embeddings.adding_new_face(image_array, user_id))
+    return jsonify({"success": True, "message": "Image received and processed successfully."})
 
 
 if __name__ == '__main__':

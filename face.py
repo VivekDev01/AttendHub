@@ -4,6 +4,7 @@ from keras_facenet import FaceNet
 from mtcnn.mtcnn import MTCNN
 import pickle
 import numpy as np
+
 class Embeddings:
     def encodings(self,img):
         face_detector = MTCNN()
@@ -23,22 +24,16 @@ class Embeddings:
             Face_Encodings = self.encodings(cv2.imread(os.path.join(path,filename)))
             face_embeddings[filename.removesuffix(".jpg")] = Face_Encodings
         return face_embeddings
-    def adding_new_face(self, img_buffer, student_id):
+    def adding_new_face(self, img, student_id):
+        print('ok')
         file = open("encoded_data.p", "rb")
         encoding_faces = pickle.load(file)
         for key in encoding_faces.keys():
             if key == student_id:
                 return 'Student already exists'
-        img_np_array = np.frombuffer(img_buffer, dtype=np.uint8)
-        img_cv = cv2.imdecode(img_np_array, cv2.IMREAD_COLOR)
-        print(img_cv)
-        Face_Encodings = self.encodings(img_cv)
+        Face_Encodings = self.encodings(img)
         encoding_faces[student_id] = Face_Encodings
         file = open("encoded_data.p", "wb")
         pickle.dump(encoding_faces, file)
         file.close()
         return 'Student added successfully'
-
-    
-
-

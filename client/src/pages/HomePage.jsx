@@ -9,6 +9,7 @@ import "../styles/HomePage.css";
 import { Modal, Form, Input, message } from "antd";
 import bg from "../images/bg.jpg";
 
+
 const HomePage = () => {
   const { user } = useSelector((state) => state.user);
   const isStudent = user ? user.isStudent : false;
@@ -53,71 +54,79 @@ const HomePage = () => {
 
 
   const handleBothFinishes = async (values) => {
-    await handleFinish(values);
+    // await handleFinish(values);
     await handleFinishForFlask(values);
   };
 
-  const handleFinishForFlask = async (values) => {
-    const formData = new FormData();
-    formData.append("userId", user._id);
-    formData.append("name", values.name);
-    formData.append("studentId", values.studentId);
-    formData.append("image", selectedFile);
-    const contentType = selectedFile.type || "png"; // Set the contentType or use a default value
-    formData.append("contentType", contentType);
-    try {
-      const res = await axios.post("http://localhost:5000/user/student-register",  
-      {
-        ...values,
-        userId: user._id,
-      });
-      window.location.reload();
-      if (res.data.success) {
-        message.success(res.data.message);
-        navigate("/");
-        window.location.reload();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    }
-
-
-  const handleFinish = async (values) => {
+  const handleFinishForFlask = async () => {
     setIsStudentRegistrationModalOpen(false);
-    const formData = new FormData();
-    formData.append("userId", user._id);
-    formData.append("name", values.name);
-    formData.append("studentId", values.studentId);
-    formData.append("image", selectedFile);
-    const contentType = selectedFile.type || "png"; // Set the contentType or use a default value
-    formData.append("contentType", contentType);
-    try {
-      dispatch(showLoading());
-      const res = await axios.post(
-        "/api/v1/user/student-register",
-        {
-          ...values,
-          userId: user._id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      dispatch(hideLoading());
-      if (res.data.success) {
-        message.success(res.data.message);
-      } else {
-        message.error(res.data.success);
-      }
-    } catch (error) {
-      dispatch(hideLoading());
-      console.log(error);
-      message.error("Something went wrong");
+    if (!selectedFile) {
+      message.error("Please select an image.");
+      return;
     }
+  
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      try {
+        const imageDataURL = reader.result;
+        const res = await axios.post(
+          "http://localhost:5000/user/student-register",
+          {
+            image: imageDataURL,
+            userId: user._id,
+            studentId: formRef.current.getFieldValue("studentId"),
+          }
+        );
+        if (res.data.success) {
+          message.success(res.data.message);
+          window.location.reload();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    reader.readAsDataURL(selectedFile);
   };
+  
+
+  // const handleFinish = async (values) => {
+  //   setIsStudentRegistrationModalOpen(false);
+  //   const formData = new FormData();
+  //   formData.append("userId", user._id);
+  //   formData.append("name", values.name);
+  //   formData.append("studentId", values.studentId);
+  //   const contentType = selectedFile.type || "png"; // Set the contentType or use a default value
+  //   formData.append("contentType", contentType);
+  //   let image = selectedFile;
+  //   image = image.toString('base64');
+  //   formData.append("image", image);
+  //   try {
+  //     dispatch(showLoading());
+  //     const res = await axios.post(
+  //       "/api/v1/user/student-register",
+  //       {
+  //         ...values,
+  //         image: image,
+  //         userId: user._id,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+  //     dispatch(hideLoading());
+  //     if (res.data.success) {
+  //       message.success(res.data.message);
+  //     } else {
+  //       message.error(res.data.success);
+  //     }
+  //   } catch (error) {
+  //     dispatch(hideLoading());
+  //     console.log(error);
+  //     message.error("Something went wrong");
+  //   }
+  // };
 
   const handleJoinClass = async (values) => {
     try {
@@ -291,15 +300,8 @@ const HomePage = () => {
               onFinish={handleBothFinishes}
               layout="vertical"
               className="m-3"
+              enctype="multipart/form-data"
             >
-              <Form.Item
-                label="Name"
-                name="name"
-                required
-                rules={[{ required: true }]}
-              >
-                <Input type="text" placeholder="Your Name" />
-              </Form.Item>
               <Form.Item
                 label="Student ID"
                 name="studentId"
