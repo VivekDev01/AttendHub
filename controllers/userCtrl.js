@@ -253,6 +253,7 @@ const getAttendanceRecordsController = async (req, res) => {
                 const className = classInfo.className;
                 const facultyName = classInfo.facultyName;
                 JoinedAttendanceSummary[classId] = {
+                    classId,
                     facultyName,
                     className,
                     totalDays,
@@ -292,6 +293,7 @@ const getAttendanceRecordsController = async (req, res) => {
                 const classInfo = await classModel.findById(classId);
                 const className = classInfo.className;
                 CreatedAttendanceSummary[classId] = {
+                    classId,
                     className,
                     averageTotalStudents: classInfo.studentsJoined?.length,
                     averagePresentStudents: totalPresentStudents / attendances.length,

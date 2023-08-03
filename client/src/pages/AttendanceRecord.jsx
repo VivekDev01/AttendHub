@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../componenets/Layout";
 import axios from "axios";
 import { Table, Tabs } from "antd";
+import { Link } from "react-router-dom";
 const { TabPane } = Tabs;
 
 const AttendanceRecord = () => {
@@ -34,8 +35,8 @@ const AttendanceRecord = () => {
 
   const columnsForJoinedClassrooms = [
     {
-      title: "Class Name",
-      dataIndex: "className",
+      title: "Classroom ID",
+      dataIndex: "classId",
     },
     {
       title: "Faculty Name",
@@ -57,8 +58,11 @@ const AttendanceRecord = () => {
 
   const columnsForCreatedClassrooms = [
     {
-      title: "Class Name",
-      dataIndex: "className",
+      title: "Classroom ID",
+      dataIndex: "classId",
+      render: (text, record) => (
+        <Link to={`/classroom/${record.classId}`}>{text}</Link>
+      ),
     },
     {
       title: "Average Total Students",

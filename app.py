@@ -53,7 +53,6 @@ streaming= True
 def mark_attendence(id,cl_id):
     id= ObjectId(id)
     cl_id= ObjectId(cl_id)
-    print("marking attendence", type(id), type(cl_id))
     try:
         current_day = date.today()
         current_day_str = current_day.strftime('%Y-%m-%d')
@@ -92,7 +91,6 @@ def video_streaming(class_id):
             for id,vector in face_embeddings.items():
                 student_id.append(id)
                 distance.append(face_encoder.compute_distance(embeddings[0],vector[0]))
-                print(distance)
             if(distance[np.argmin(distance)] < 0.35):
                 id = student_id[np.argmin(distance)]
                 if(id in joined_students):
@@ -138,7 +136,6 @@ def stop_attendance():
         data = request.json
         classId = data.get('classId')
         stopcamera()
-        print("Attendance Stopped")
         response_data = {
             'success': True,
             'message': 'Attendance stopped successfully!'
@@ -154,7 +151,6 @@ def stop_attendance():
 
 @app.route('/attendance/<classId>', methods=['POST', 'GET'])
 def attendence(classId):
-    print("clasId is" , classId)
     return Response(video_streaming(classId), mimetype='multipart/x-mixed-replace; boundary=frame')  
 
 @app.route('/startAttendance', methods=['POST'])
@@ -178,7 +174,6 @@ def attendence_starter():
 
         if existing_attendance:
             existing_attendance_id = existing_attendance['_id']
-            print(f"Attendance record already exists for className: {className} and date: {current_day_str}")
         else:
             new_attendance = {
                 'classId': classId,
@@ -191,9 +186,7 @@ def attendence_starter():
             }
             x = attendances.insert_one(new_attendance)
             existing_attendance_id = x.inserted_id
-            print(f"Attendance record created for className: {className} and date: {current_day_str}")
 
-        print("Attendance Started")
         data = {
             'success': True,
             'message': 'Attendance started successfully!',
@@ -204,7 +197,7 @@ def attendence_starter():
         return redirect(f'/attendance/{classId}')
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred in starting attendance : {e}")
         data = {
             'success': False,
             'message': 'An error occurred while starting attendance.'
@@ -228,7 +221,7 @@ def student_register():
     pil_image = Image.open(BytesIO(decoded_image))
     image_array = np.array(pil_image)
     embeddings = Embeddings()
-    print(embeddings.adding_new_face(image_array, user_id))
+    embeddings.adding_new_face(image_array, user_id)
     return jsonify({"success": True, "message": "Image received and processed successfully."})
 
 
