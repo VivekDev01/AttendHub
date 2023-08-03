@@ -51,23 +51,25 @@ app.secret_key = os.urandom(22)
 
 streaming= True
 def mark_attendence(id,cl_id):
+    id= ObjectId(id)
+    cl_id= ObjectId(cl_id)
+    print("marking attendence", type(id), type(cl_id))
     try:
         current_day = date.today()
         current_day_str = current_day.strftime('%Y-%m-%d')
-        for items in attendances:
-            if(items["Date"] == current_day_str and items["classId"] == cl_id):
-                items["studentsPresent"].append(id)
-                break
+        attendence_table = attendances.find_one({"classId":cl_id,"Date":current_day_str})
+        students_present = attendence_table["studentsPresent"]
+        if(id not in students_present):
+            attendances.find_one_and_update({"classId":cl_id,"Date":current_day_str},{"$push":{"studentsPresent":id}})
         #my_cursor.execute("insert into attendence values(%s , %s, %s);",(i0d,name,current_day))
     except:
-        print("Error in Marking Attendence")
+        print(f"An error occurred in marking attendance: {e}")
         return 
     
 def video_streaming(class_id):
-    print(class_id)
-    for cur_class in classes.find():
-        if(cur_class["_id"] == class_id):
-            joinde_students = cur_class["studentsJoined"]
+    class_id= ObjectId(class_id)
+    currClass = classes.find_one({"_id":class_id})
+    joined_students = currClass["studentsJoined"]
     face_encoder = FaceNet()
     face_detector = MTCNN()
     global capture
@@ -93,22 +95,18 @@ def video_streaming(class_id):
                 print(distance)
             if(distance[np.argmin(distance)] < 0.35):
                 id = student_id[np.argmin(distance)]
-                flag=False
-                for curId in joinde_students:
-                    if(curId == id):
-                        for user in users.find():
-                            if(user["_id"] == id):
-                                name = user['name']
-                                flag=True
-                                break
-                        if(flag):
-                            break   
-                         
-                # my_cursor.execute("select student_name from students where student_id = %s",(id,))
-                # name = my_cursor.fetchone()[0]
-                cv2.rectangle(image,(x1,y1),(x2,y2),(255,0,0),3)
-                cv2.putText(image,name,(x1,y1),cv2.FONT_HERSHEY_TRIPLEX,2,(255, 255, 255))
-                mark_attendence(id,class_id)
+                if(id in joined_students):
+                    student = users.find_one({"_id":ObjectId(id)})
+                    name=student["name"]
+                            
+                    # my_cursor.execute("select student_name from students where student_id = %s",(id,))
+                    # name = my_cursor.fetchone()[0]
+                    cv2.rectangle(image,(x1,y1),(x2,y2),(255,0,0),3)
+                    cv2.putText(image,name,(x1,y1),cv2.FONT_HERSHEY_TRIPLEX,2,(255, 255, 255))
+                    mark_attendence(id,class_id)
+                else :
+                    msg = "Student Not Present in Class!"
+                    cv2.putText(image,msg,(15,460),cv2.FONT_HERSHEY_TRIPLEX,1,(255, 255, 255))
             else:
                 msg = "Student Not Present in DataBase!"
                 cv2.putText(image,msg,(15,460),cv2.FONT_HERSHEY_TRIPLEX,1,(255, 255, 255))
