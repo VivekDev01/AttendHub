@@ -1,7 +1,6 @@
 import userModel from "../models/userModel.js"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import studentModel from "../models/studentModel.js";
 import classModel from "../models/classModel.js";
 import mongoose from "mongoose";
 import attendanceModel from "../models/attendanceModel.js";
@@ -81,25 +80,6 @@ const authController = async (req, res) => {
     }
 }
 
-const studentRegisterController = async (req, res) => {
-    try {
-        await studentModel.create({
-            ...req.body,
-        });
-
-        // Await the update operation to ensure it completes before sending the response
-        await userModel.findByIdAndUpdate({ _id: req.body.userId }, { isStudent: true });
-
-        res.status(201).send({
-            message: 'Student Registered Successfully',
-            success: true,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to register student' });
-    }
-};
-
 const createClassController = async (req, res) => {
     try {
         let facultyId = req.body.facultyId;
@@ -112,7 +92,7 @@ const createClassController = async (req, res) => {
             facultyName: facultyName,
         });
         classroom.save();
-        await userModel.findByIdAndUpdate({ _id: req.body.userId }, { $push: { classesCreated: classroom._id } });
+        await userModel.findByIdAndUpdate({ _id: req.body.userId }, { $push: { classesCreated: classroom._id }, isFaculty: true });
         res.status(201).send({
             message: 'Class Created Successfully',
             success: true,
@@ -341,4 +321,4 @@ const getAttendanceRecordsController = async (req, res) => {
 
 
 
-export { loginController, registerController, authController, studentRegisterController, createClassController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController, getClassroomController };
+export { loginController, registerController, authController, createClassController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController, getClassroomController };

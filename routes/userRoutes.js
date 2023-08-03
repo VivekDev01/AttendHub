@@ -1,5 +1,5 @@
 import express from "express";
-import { authController, loginController, registerController, studentRegisterController, createClassController, getClassroomController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController} from "../controllers/userCtrl.js";
+import { authController, loginController, registerController, createClassController, getClassroomController, joinClassroomController, getClassroomsListController, getAttendanceRecordsController} from "../controllers/userCtrl.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 
@@ -16,8 +16,6 @@ router.post('/register', registerController)
 
 //Authorization || POST
 router.post('/getUserData', authMiddleware, authController)
-
-router.post("/student-register", authMiddleware, studentRegisterController)
 
 router.post("/getClassroom", authMiddleware, getClassroomController)
 
