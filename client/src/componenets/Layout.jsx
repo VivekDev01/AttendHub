@@ -123,7 +123,7 @@ const Layout = ({ children }) => {
 
         <main>
           <div className="children-area">
-            <div className="container">{children}</div>
+            {children}
           </div>
         </main>
 

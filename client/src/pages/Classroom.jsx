@@ -123,7 +123,7 @@ const Classroom = () => {
         <div className="container-attendance">
             <button onClick={handleStartAttendance}>Start Attendance</button>
         </div>
-      </div>
+        </div>
     </Layout>
   );
 };

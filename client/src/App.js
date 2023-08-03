@@ -8,7 +8,6 @@ import Spinner from "./componenets/Spinner";
 import ProtectedRoute from "./componenets/ProtectedRoute.jsx";
 import PublicRoute from "./componenets/PublicRoute.jsx";
 import Classroom from "./pages/Classroom.jsx";
-import StudentRegister from "./pages/StudentRegister.jsx";
 import ClassroomList from "./pages/ClassroomList";
 import AttendanceRecord from "./pages/AttendanceRecord";
 import Streaming from "./pages/Streaming";
@@ -46,16 +45,6 @@ function App() {
                 <PublicRoute>
                   <Register />
                 </PublicRoute>
-              }
-            />
-
-
-            <Route
-              path="/student-register"
-              element={
-                <ProtectedRoute>
-                  <StudentRegister />
-                </ProtectedRoute>
               }
             />
 

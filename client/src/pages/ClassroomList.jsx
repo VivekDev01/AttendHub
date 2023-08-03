@@ -98,7 +98,7 @@ const Classes = () => {
 
   return (
     <Layout>
-      <div>
+      <div className="container">
         {/* Remove the semicolon after "Tabs" component */}
         <Tabs defaultActiveKey="1" onChange={onChange}>
           {/* Render the content based on the selected tab */}

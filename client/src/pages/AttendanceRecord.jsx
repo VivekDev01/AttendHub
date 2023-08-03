@@ -114,7 +114,7 @@ const AttendanceRecord = () => {
 
   return (
     <Layout>
-      <div>
+      <div className="container">
         <Tabs defaultActiveKey="1" activeKey={activeTopTab} onChange={onTopTabChange}>
           <TabPane tab="Joined Classrooms" key="1">
             {renderJoinedClassrooms()}
