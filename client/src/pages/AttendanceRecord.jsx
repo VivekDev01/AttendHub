@@ -30,14 +30,12 @@ const AttendanceRecord = () => {
 
   useEffect(() => {
     getClassroomsList();
-  }, []); 
+  }, []);
 
-
- 
   const columnsForJoinedClassrooms = [
     {
       title: "Class Name",
-      dataIndex: "className", // Add className column for joined classrooms
+      dataIndex: "className",
     },
     {
       title: "Faculty Name",
@@ -60,7 +58,7 @@ const AttendanceRecord = () => {
   const columnsForCreatedClassrooms = [
     {
       title: "Class Name",
-      dataIndex: "className", // Add className column for created classrooms
+      dataIndex: "className",
     },
     {
       title: "Average Total Students",
@@ -106,7 +104,6 @@ const AttendanceRecord = () => {
     );
   };
 
-
   const onTopTabChange = (key) => {
     setActiveTopTab(key); // Update the active top-level tab key when a tab is changed
   };
@@ -116,7 +113,7 @@ const AttendanceRecord = () => {
   };
 
   return (
-<Layout>
+    <Layout>
       <div>
         <Tabs defaultActiveKey="1" activeKey={activeTopTab} onChange={onTopTabChange}>
           <TabPane tab="Joined Classrooms" key="1">

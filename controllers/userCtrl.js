@@ -235,89 +235,87 @@ const getAttendanceRecordsController = async (req, res) => {
         // Calculate the presence and absence days for each class for joined classes
         const JoinedAttendanceSummary = {};
         for (const classId in joinedAttendanceMap) {
-        const attendances = joinedAttendanceMap[classId];
-        let totalDays = 0;
-        let presentDays = 0;
-        let absentDays = 0;
+            const attendances = joinedAttendanceMap[classId];
+            let totalDays = attendances.length;
+            let presentDays = 0;
+            let absentDays = 0;
 
-        attendances.forEach(async attendance => {
-        if (attendance.studentsPresent.includes(userId)) {
-            presentDays++;
-        } else if (attendance.studentsAbsent.includes(userId)) {
-            absentDays++;
+            for (const attendance of attendances) {
+                if (attendance.studentsPresent.includes(userId)) {
+                    presentDays++;
+                } else if (attendance.studentsAbsent.includes(userId)) {
+                    absentDays++;
+                }
+            }
+
+            try {
+                const classInfo = await classModel.findById(classId);
+                const className = classInfo.className;
+                const facultyName = classInfo.facultyName;
+                JoinedAttendanceSummary[classId] = {
+                    facultyName,
+                    className,
+                    totalDays,
+                    presentDays,
+                    absentDays: totalDays-presentDays,
+                };
+            } catch (error) {
+                console.error('Failed to fetch class information', error);
+                res.status(500).json({ error: 'Failed to fetch class information' });
+            }
         }
 
-        try {
-            const classInfo = await classModel.findById(attendance.classId);
-            const className = classInfo.className; 
-            const facultyName = classInfo.facultyName;
-            JoinedAttendanceSummary[classId] = {
-                facultyName,
-                className, 
-                totalDays: presentDays + absentDays,
-                presentDays,
-                absentDays,
-            };
-        } catch (error) {
-            console.error('Failed to fetch class information', error);
-            res.status(500).json({ error: 'Failed to fetch class information' });
-        }
-    });
-}
+        // Create an object to hold mapped attendances for created classes
+        const createdAttendanceMap = {};
 
+        // Map attendances to their respective classes for created classes
+        attendancesforCreatedClasses.forEach(attendance => {
+            if (!createdAttendanceMap[attendance.classId]) {
+                createdAttendanceMap[attendance.classId] = [];
+            }
+            createdAttendanceMap[attendance.classId].push(attendance);
+        });
 
-
-         // Create an object to hold mapped attendances for created classes
-         const createdAttendanceMap = {};
-
-         // Map attendances to their respective classes for created classes
-         attendancesforCreatedClasses.forEach(attendance => {
-             if (!createdAttendanceMap[attendance.classId]) {
-                 createdAttendanceMap[attendance.classId] = [];
-             }
-             createdAttendanceMap[attendance.classId].push(attendance);
-         });
-
-         const CreatedAttendanceSummary = {};
+        const CreatedAttendanceSummary = {};
         // Calculate the average of total students, average of student present, and average of students absent for each created class
         for (const classId in createdAttendanceMap) {
             const attendances = createdAttendanceMap[classId];
             let totalPresentStudents = 0;
             let totalAbsentStudents = 0;
 
-            attendances.forEach(async attendance => {
+            for (const attendance of attendances) {
                 totalPresentStudents += attendance.studentsPresent.length;
                 totalAbsentStudents += attendance.studentsAbsent.length;
+            }
 
-                try {
-                    const classInfo = await classModel.findById(attendance.classId);
-                    const className = classInfo.className; 
-                    CreatedAttendanceSummary[classId] = {
-                        className, 
-                        averageTotalStudents: (totalPresentStudents + totalAbsentStudents) / attendances.length,
-                        averagePresentStudents: totalPresentStudents / attendances.length,
-                        averageAbsentStudents: totalAbsentStudents / attendances.length,
-                    };
-                } catch (error) {
-                    console.error('Failed to fetch class information', error);
-                    res.status(500).json({ error: 'Failed to fetch class information' });
-                }
-            });
+            try {
+                const classInfo = await classModel.findById(classId);
+                const className = classInfo.className;
+                CreatedAttendanceSummary[classId] = {
+                    className,
+                    averageTotalStudents: classInfo.studentsJoined?.length,
+                    averagePresentStudents: totalPresentStudents / attendances.length,
+                    averageAbsentStudents: classInfo.studentsJoined?.length - (totalPresentStudents / attendances.length),
+                };
+            } catch (error) {
+                console.error('Failed to fetch class information', error);
+                res.status(500).json({ error: 'Failed to fetch class information' });
+            }
         }
 
-         res.status(200).send({
-             message: 'Attendance Records Fetched Successfully',
-             success: true,
-             data: {
-                 JoinedAttendanceSummary,
-                 CreatedAttendanceSummary,
-             },
-         });
-     } catch (error) {
-         console.error(error);
-         res.status(500).json({ error: 'Failed to fetch attendance records' });
-     }
- };
+        res.status(200).send({
+            message: 'Attendance Records Fetched Successfully',
+            success: true,
+            data: {
+                JoinedAttendanceSummary,
+                CreatedAttendanceSummary,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch attendance records' });
+    }
+};
 
 
 

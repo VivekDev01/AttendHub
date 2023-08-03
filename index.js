@@ -25,4 +25,4 @@ app.use("/api/v1/user", router);
 const port=process.env.PORT || 4000
 app.listen(port, ()=>{
     console.log(`Server Running in ${process.env.NODE_MODE} Mode on port ${port}`.bgCyan.white);
-});
+});  

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const attendanceSchema = new mongoose.Schema({
     classId: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true
     },
     ClassName:{
