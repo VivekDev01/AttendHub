@@ -4,11 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "cd server && npm install  && cd ../client && npm install && npm run build",
+    "start": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "server": "nodemon index.js",
-    "client": "npm start --prefix ./client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "production": "NODE_ENV=production node app.py", 
+    "install-backend": "pip install -r requirements.txt" 
   },
   "author": "Vivek Dev Shah",
   "license": "ISC",

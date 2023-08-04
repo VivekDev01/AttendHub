@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from datetime import date
 from bson.objectid import ObjectId  
 
@@ -15,8 +15,6 @@ import os
 from keras_facenet import FaceNet
 from mtcnn.mtcnn import MTCNN
 import numpy as np
-import mysql.connector as db_connector
-from datetime import date,time
 from face import Embeddings
 from werkzeug.utils import secure_filename
 import  base64
@@ -150,6 +148,7 @@ def stop_attendance():
 
 
 @app.route('/attendance/<classId>', methods=['POST', 'GET'])
+@cross_origin()
 def attendence(classId):
     return Response(video_streaming(classId), mimetype='multipart/x-mixed-replace; boundary=frame')  
 
@@ -226,4 +225,4 @@ def student_register():
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
