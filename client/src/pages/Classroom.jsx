@@ -61,7 +61,7 @@ const Classroom = () => {
   const handleStartAttendance = async () => {
     try {
       const timeout = 3000; // Set a timeout of 3 seconds
-      const startAttendanceRequest = axios.post("https://attendhub.onrender.com/startAttendance", {
+      const startAttendanceRequest = axios.post("http://localhost:5000/startAttendance", {
         classId: classId,
         facultyId: classroom.facultyId,
         facultyName: classroom.facultyName,

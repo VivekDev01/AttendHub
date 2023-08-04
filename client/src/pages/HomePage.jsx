@@ -69,7 +69,7 @@ const HomePage = () => {
         dispatch(showLoading());
         const imageDataURL = reader.result;
         const res = await axios.post(
-          "https://attendhub.onrender.com/user/student-register",
+          "http://localhost:5000/user/student-register",
           {
             image: imageDataURL,
             userId: user._id,

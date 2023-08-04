@@ -193,6 +193,7 @@ def attendence_starter():
         }
         json_data = json.dumps(data)
         
+        print("Attendance Start Triggered")
         return redirect(f'/attendance/{classId}')
 
     except Exception as e:
