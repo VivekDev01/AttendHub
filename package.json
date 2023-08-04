@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "npm run install-backend && cd server && npm install  && cd ../client && npm install && npm run build",
-    "start": "python app.py && nodemon server/index.js",
+    "start-flask": "python app.py",
+    "start-node": "nodemon server/index.js",
+    "start": "concurrently \"npm run start-flask\" \"npm run start-node\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "production": "python app.py", 
     "install-backend": "pip install -r requirements.txt" 
