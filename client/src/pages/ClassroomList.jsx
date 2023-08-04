@@ -35,7 +35,6 @@ const Classes = () => {
   }, []); // Empty array ensures that this effect runs only once on initial render
 
   const onChange = (key) => {
-    console.log(key);
     setActiveTab(key); // Update the active tab key when a tab is changed
   };
 

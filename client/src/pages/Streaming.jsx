@@ -46,7 +46,7 @@ const Streaming = () => {
     
       const handleStopAttendance = async () => {
         try {
-          const res = await axios.post("http://localhost:5000/stopAttendance", {
+          const res = await axios.post("https://attendhub.onrender.com/stopAttendance", {
             classId: classId,
             isAttendanceStarted: false,
           });
@@ -73,7 +73,7 @@ const Streaming = () => {
 
       <div className="container-copy">
         <h1>Live Stream</h1>
-        <img src={`http://localhost:5000/attendance/${classId}`} alt="Live Streaming" />
+        <img src={`https://attendhub.onrender.com/attendance/${classId}`} alt="Live Streaming" />
       </div>
 
       <div className="container-attendance">
